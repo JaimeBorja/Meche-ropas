@@ -1,0 +1,2161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="MI ANOTADOR DE DEUDAS" />
+  <meta name="theme-color" content="#0f4c81" />
+  <title>MI ANOTADOR DE DEUDAS</title>
+  <style>
+    :root {
+      --primary: #0f4c81;
+      --primary-dark: #0a355c;
+      --primary-light: #e8f1fa;
+      --secondary: #1e293b;
+      --bg: #f4f6f9;
+      --surface: #ffffff;
+      --border: #dce3ec;
+      --text: #1e293b;
+      --text-muted: #5b6b7f;
+      --success: #15803d;
+      --success-bg: #dcfce7;
+      --warning: #b45309;
+      --warning-bg: #fef3c7;
+      --danger: #b91c1c;
+      --danger-bg: #fee2e2;
+      --radius: 12px;
+      --shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+      --shadow-lg: 0 10px 25px rgba(15, 23, 42, 0.14);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding-bottom: 84px;
+    }
+
+    /* HEADER */
+    header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: #ffffff;
+      padding: 16px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+    }
+
+    .header-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.16);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .brand h1 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: 0.4px;
+      line-height: 1.2;
+    }
+
+    .brand span {
+      display: block;
+      font-size: 0.78rem;
+      opacity: 0.85;
+      font-weight: 400;
+    }
+
+    /* DESKTOP NAVIGATION */
+    nav.desktop-nav {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .nav-btn {
+      background: rgba(255, 255, 255, 0.12);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      padding: 10px 15px;
+      border-radius: 9px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+
+    .nav-btn:hover {
+      background: rgba(255, 255, 255, 0.22);
+    }
+
+    .nav-btn.active {
+      background: #ffffff;
+      color: var(--primary);
+      border-color: #ffffff;
+    }
+
+    /* MOBILE BOTTOM NAV */
+    nav.mobile-nav {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      z-index: 120;
+      padding: 6px 4px calc(6px + env(safe-area-inset-bottom));
+      box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.07);
+    }
+
+    .mobile-nav-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 2px;
+    }
+
+    .m-nav-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      padding: 6px 2px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 8px;
+    }
+
+    .m-nav-btn svg {
+      width: 21px;
+      height: 21px;
+    }
+
+    .m-nav-btn.active {
+      color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    /* MAIN CONTAINER */
+    main {
+      max-width: 1120px;
+      margin: 20px auto;
+      padding: 0 16px;
+    }
+
+    .section {
+      display: none;
+      animation: fadeIn 0.18s ease;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    .section-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--secondary);
+    }
+
+    /* CARDS & GRIDS */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .kpi-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+      border-left: 5px solid var(--primary);
+    }
+
+    .kpi-card.danger { border-left-color: var(--danger); }
+    .kpi-card.success { border-left-color: var(--success); }
+    .kpi-card.warning { border-left-color: var(--warning); }
+
+    .kpi-label {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      margin-bottom: 6px;
+    }
+
+    .kpi-value {
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: var(--secondary);
+      word-break: break-word;
+    }
+
+    .kpi-card.danger .kpi-value { color: var(--danger); }
+    .kpi-card.success .kpi-value { color: var(--success); }
+    .kpi-card.warning .kpi-value { color: var(--warning); }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+      margin-bottom: 18px;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--secondary);
+    }
+
+    /* BUTTONS */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 11px 16px;
+      border-radius: 10px;
+      font-size: 0.92rem;
+      font-weight: 600;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.16s ease;
+      text-decoration: none;
+      min-height: 44px;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    .btn-primary:hover { background: var(--primary-dark); }
+
+    .btn-success {
+      background: var(--success);
+      color: #ffffff;
+    }
+
+    .btn-success:hover { background: #166534; }
+
+    .btn-danger {
+      background: var(--danger);
+      color: #ffffff;
+    }
+
+    .btn-danger:hover { background: #991b1b; }
+
+    .btn-outline {
+      background: var(--surface);
+      color: var(--text);
+      border-color: var(--border);
+    }
+
+    .btn-outline:hover { background: #f8fafc; border-color: #cbd5e1; }
+
+    .btn-sm {
+      padding: 7px 11px;
+      font-size: 0.82rem;
+      min-height: 36px;
+      border-radius: 8px;
+    }
+
+    .btn-block {
+      width: 100%;
+    }
+
+    /* FORMS */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--secondary);
+      margin-bottom: 5px;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 11px 13px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      font-size: 1rem;
+      color: var(--text);
+      background: #ffffff;
+      min-height: 44px;
+      font-family: inherit;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(15, 76, 129, 0.15);
+    }
+
+    textarea.form-control {
+      min-height: 76px;
+      resize: vertical;
+    }
+
+    .form-hint {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* SEARCH & FILTERS */
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .search-box {
+      flex: 1;
+      min-width: 220px;
+      position: relative;
+    }
+
+    .filter-pills {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .pill {
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      min-height: 38px;
+    }
+
+    .pill.active {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+
+    /* BADGES */
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .badge-pending { background: var(--warning-bg); color: var(--warning); }
+    .badge-paid { background: var(--success-bg); color: var(--success); }
+    .badge-overdue { background: var(--danger-bg); color: var(--danger); }
+
+    /* TABLES */
+    .table-responsive {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 620px;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.9rem;
+      vertical-align: middle;
+    }
+
+    th {
+      background: #f8fafc;
+      color: var(--text-muted);
+      font-weight: 700;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    tr:hover td {
+      background: #fafbfd;
+    }
+
+    .actions-cell {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    /* CLIENT CARDS LIST (MOBILE FRIENDLY) */
+    .client-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 14px;
+    }
+
+    .client-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+      transition: border-color 0.15s ease;
+    }
+
+    .client-card:hover {
+      border-color: var(--primary);
+    }
+
+    .client-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .client-name {
+      font-size: 1.08rem;
+      font-weight: 700;
+      color: var(--secondary);
+    }
+
+    .client-meta {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+
+    .client-balance-box {
+      background: #f8fafc;
+      border-radius: 9px;
+      padding: 10px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .client-card-actions {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 7px;
+    }
+
+    /* MODAL */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.55);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      overflow-y: auto;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--surface);
+      border-radius: 14px;
+      width: 100%;
+      max-width: 520px;
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+      margin: auto;
+      animation: modalPop 0.18s ease;
+    }
+
+    @keyframes modalPop {
+      from { opacity: 0; transform: scale(0.96); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .modal-header {
+      padding: 16px 20px;
+      background: #f8fafc;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .modal-title {
+      font-size: 1.08rem;
+      font-weight: 700;
+      color: var(--secondary);
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      line-height: 1;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 4px 8px;
+    }
+
+    .modal-body {
+      padding: 18px 20px;
+      max-height: 75vh;
+      overflow-y: auto;
+    }
+
+    .modal-footer {
+      padding: 14px 20px;
+      background: #f8fafc;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* ALERTS & TOAST */
+    .alert-box {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: #1e3a8a;
+      border-radius: 10px;
+      padding: 14px 16px;
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+    }
+
+    .alert-box.warning {
+      background: #fffbeb;
+      border-color: #fde68a;
+      color: #92400e;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 85px;
+      right: 16px;
+      left: 16px;
+      max-width: 420px;
+      margin: 0 auto;
+      background: var(--secondary);
+      color: #ffffff;
+      padding: 13px 18px;
+      border-radius: 10px;
+      font-size: 0.92rem;
+      font-weight: 600;
+      box-shadow: var(--shadow-lg);
+      z-index: 300;
+      display: none;
+      text-align: center;
+    }
+
+    .toast.show {
+      display: block;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 36px 16px;
+      color: var(--text-muted);
+    }
+
+    .empty-state p {
+      margin-bottom: 14px;
+      font-size: 0.95rem;
+    }
+
+    .profile-info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .info-item {
+      background: #f8fafc;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    .info-item small {
+      display: block;
+      color: var(--text-muted);
+      font-size: 0.76rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .info-item span {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--secondary);
+    }
+
+    @media (max-width: 768px) {
+      nav.desktop-nav {
+        display: none;
+      }
+      nav.mobile-nav {
+        display: block;
+      }
+      .kpi-value {
+        font-size: 1.25rem;
+      }
+      .section-title {
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ENCABEZADO -->
+  <header>
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-icon">Gs</div>
+        <div>
+          <h1>MI ANOTADOR DE DEUDAS</h1>
+          <span>Control de ventas de ropa a crédito y cobranzas</span>
+        </div>
+      </div>
+
+      <nav class="desktop-nav" aria-label="Navegación principal">
+        <button class="nav-btn active" data-tab="dashboard" onclick="navigate('dashboard')">Panel Principal</button>
+        <button class="nav-btn" data-tab="clients" onclick="navigate('clients')">Clientes</button>
+        <button class="nav-btn" data-tab="debts" onclick="navigate('debts')">Deudas</button>
+        <button class="nav-btn" data-tab="reports" onclick="navigate('reports')">Informes</button>
+        <button class="nav-btn" data-tab="backup" onclick="navigate('backup')">Respaldo</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main>
+
+    <!-- ALERTA SI LOCALSTORAGE FALLA -->
+    <div id="storage-warning" class="alert-box warning" style="display:none;">
+      <strong>Aviso de almacenamiento:</strong> Tu navegador tiene bloqueado el almacenamiento local (por ejemplo, modo privado estricto). Los datos funcionarán mientras la pestaña esté abierta, pero recuerda descargar una copia de seguridad JSON antes de cerrar.
+    </div>
+
+    <!-- 1. PANEL PRINCIPAL -->
+    <section id="sec-dashboard" class="section active">
+      <div class="section-header">
+        <h2 class="section-title">Panel Principal</h2>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="btn btn-primary" onclick="openClientModal()">+ Nuevo Cliente</button>
+          <button class="btn btn-success" onclick="openQuickPaymentModal()">+ Registrar Abono</button>
+        </div>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-label">Clientes Registrados</div>
+          <div class="kpi-value" id="kpi-total-clients">0</div>
+        </div>
+        <div class="kpi-card danger">
+          <div class="kpi-label">Total Deudas Pendientes</div>
+          <div class="kpi-value" id="kpi-pending-amount">Gs. 0</div>
+        </div>
+        <div class="kpi-card success">
+          <div class="kpi-label">Total Dinero Cobrado</div>
+          <div class="kpi-value" id="kpi-collected-amount">Gs. 0</div>
+        </div>
+        <div class="kpi-card warning">
+          <div class="kpi-label">Clientes con Deuda</div>
+          <div class="kpi-value" id="kpi-debtors-count">0</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Últimos Pagos Registrados</h3>
+          <button class="btn btn-outline btn-sm" onclick="navigate('debts')">Ver todas las deudas</button>
+        </div>
+        <div id="dashboard-recent-payments"></div>
+      </div>
+    </section>
+
+    <!-- 2. CLIENTES -->
+    <section id="sec-clients" class="section">
+      <div class="section-header">
+        <h2 class="section-title">Clientes</h2>
+        <button class="btn btn-primary" onclick="openClientModal()">+ Registrar Cliente</button>
+      </div>
+
+      <div class="toolbar">
+        <div class="search-box">
+          <input type="search" id="client-search-input" class="form-control" placeholder="Buscar por nombre, apellido o teléfono..." oninput="renderClients()" />
+        </div>
+        <select id="client-filter-select" class="form-control" style="max-width:220px;" onchange="renderClients()">
+          <option value="all">Todos los clientes</option>
+          <option value="with_debt">Con saldo pendiente</option>
+          <option value="no_debt">Sin deudas pendientes</option>
+        </select>
+      </div>
+
+      <div id="clients-list-container"></div>
+    </section>
+
+    <!-- 3. FICHA INDIVIDUAL DEL CLIENTE -->
+    <section id="sec-client-detail" class="section">
+      <div class="section-header">
+        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+          <button class="btn btn-outline btn-sm" onclick="navigate('clients')">← Volver</button>
+          <h2 class="section-title" id="detail-client-name">Ficha del Cliente</h2>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="btn btn-primary" onclick="openDebtModal(currentClientId)">+ Agregar Deuda</button>
+          <button class="btn btn-success" onclick="openPaymentModal(currentClientId)">+ Registrar Abono</button>
+          <button class="btn btn-outline" onclick="openClientModal(currentClientId)">Editar</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="profile-info-grid" id="detail-client-info"></div>
+        <div class="kpi-grid" style="margin-bottom:0;">
+          <div class="kpi-card">
+            <div class="kpi-label">Total Compras a Crédito</div>
+            <div class="kpi-value" id="detail-total-credit">Gs. 0</div>
+          </div>
+          <div class="kpi-card success">
+            <div class="kpi-label">Total Abonado</div>
+            <div class="kpi-value" id="detail-total-paid">Gs. 0</div>
+          </div>
+          <div class="kpi-card danger">
+            <div class="kpi-label">Saldo Total Pendiente</div>
+            <div class="kpi-value" id="detail-total-pending">Gs. 0</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Deudas del Cliente</h3>
+        </div>
+        <div id="detail-debts-container"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Historial Completo de Pagos y Abonos</h3>
+        </div>
+        <div id="detail-payments-container"></div>
+      </div>
+    </section>
+
+    <!-- 4. TODAS LAS DEUDAS Y FILTROS -->
+    <section id="sec-debts" class="section">
+      <div class="section-header">
+        <h2 class="section-title">Control de Deudas</h2>
+        <button class="btn btn-primary" onclick="openDebtModal()">+ Nueva Deuda</button>
+      </div>
+
+      <div class="toolbar">
+        <div class="search-box">
+          <input type="search" id="debt-search-input" class="form-control" placeholder="Buscar por cliente, teléfono o prenda..." oninput="renderAllDebts()" />
+        </div>
+      </div>
+
+      <div class="filter-pills" id="debt-filter-pills">
+        <button class="pill active" data-filter="all" onclick="setDebtFilter('all')">Todas</button>
+        <button class="pill" data-filter="pending" onclick="setDebtFilter('pending')">Pendientes</button>
+        <button class="pill" data-filter="paid" onclick="setDebtFilter('paid')">Pagadas</button>
+        <button class="pill" data-filter="overdue" onclick="setDebtFilter('overdue')">Vencidas</button>
+      </div>
+
+      <div class="card">
+        <div id="all-debts-container"></div>
+      </div>
+    </section>
+
+    <!-- 5. INFORMES -->
+    <section id="sec-reports" class="section">
+      <div class="section-header">
+        <h2 class="section-title">Informes y Exportación</h2>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="btn btn-primary" onclick="exportDebtsCSV()">Exportar Deudas (CSV)</button>
+          <button class="btn btn-outline" onclick="exportPaymentsCSV()">Exportar Pagos (CSV)</button>
+        </div>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-label">Total Vendido a Crédito</div>
+          <div class="kpi-value" id="rep-total-sold">Gs. 0</div>
+        </div>
+        <div class="kpi-card success">
+          <div class="kpi-label">Total Cobrado</div>
+          <div class="kpi-value" id="rep-total-collected">Gs. 0</div>
+        </div>
+        <div class="kpi-card danger">
+          <div class="kpi-label">Total Pendiente de Cobro</div>
+          <div class="kpi-value" id="rep-total-pending">Gs. 0</div>
+        </div>
+        <div class="kpi-card warning">
+          <div class="kpi-label">Monto en Deudas Vencidas</div>
+          <div class="kpi-value" id="rep-overdue-amount">Gs. 0</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Clientes con Mayor Deuda Pendiente</h3>
+        </div>
+        <div id="rep-top-debtors"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Listado de Deudas Vencidas</h3>
+        </div>
+        <div id="rep-overdue-list"></div>
+      </div>
+    </section>
+
+    <!-- 6. RESPALDO Y SEGURIDAD -->
+    <section id="sec-backup" class="section">
+      <div class="section-header">
+        <h2 class="section-title">Seguridad y Copias de Respaldo</h2>
+      </div>
+
+      <div class="alert-box">
+        <strong>Información importante sobre tus datos:</strong><br />
+        Esta aplicación guarda toda la información directamente en el almacenamiento local (<code>localStorage</code>) de este navegador y dispositivo. Los datos no se envían a ningún servidor externo.<br /><br />
+        <strong>Recomendación fundamental:</strong> Descarga una copia de seguridad en formato <strong>JSON</strong> periódicamente (por ejemplo, al final de cada semana o después de registrar varias ventas/cobros) y guárdala en tu iPhone (Archivos / iCloud), computadora o envíatela por correo/WhatsApp. Así podrás restaurar tus datos fácilmente si cambias de teléfono o limpias el historial del navegador.
+      </div>
+
+      <div class="form-grid">
+        <div class="card">
+          <h3 class="card-title" style="margin-bottom:10px;">1. Descargar Copia de Seguridad</h3>
+          <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:16px;">
+            Genera un archivo <strong>.json</strong> con todos tus clientes, deudas e historial completo de pagos.
+          </p>
+          <button class="btn btn-primary btn-block" onclick="exportBackupJSON()">Descargar Respaldo JSON</button>
+        </div>
+
+        <div class="card">
+          <h3 class="card-title" style="margin-bottom:10px;">2. Restaurar Copia de Seguridad</h3>
+          <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:16px;">
+            Selecciona un archivo <strong>.json</strong> exportado previamente para recuperar toda tu información.
+          </p>
+          <input type="file" id="restore-file-input" accept=".json,application/json" style="display:none;" onchange="handleRestoreFile(event)" />
+          <button class="btn btn-outline btn-block" onclick="document.getElementById('restore-file-input').click()">Seleccionar Archivo JSON</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 class="card-title" style="margin-bottom:10px;">Exportar Planillas (CSV)</h3>
+        <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:14px;">
+          Descarga tus registros en formato CSV compatible con Microsoft Excel y Hojas de Cálculo.
+        </p>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn btn-outline" onclick="exportClientsCSV()">Exportar Clientes (CSV)</button>
+          <button class="btn btn-outline" onclick="exportDebtsCSV()">Exportar Deudas (CSV)</button>
+          <button class="btn btn-outline" onclick="exportPaymentsCSV()">Exportar Pagos (CSV)</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- NAVEGACIÓN INFERIOR MÓVIL (IPHONE / ANDROID) -->
+  <nav class="mobile-nav" aria-label="Menú inferior móvil">
+    <div class="mobile-nav-grid">
+      <button class="m-nav-btn active" data-tab="dashboard" onclick="navigate('dashboard')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        <span>Inicio</span>
+      </button>
+      <button class="m-nav-btn" data-tab="clients" onclick="navigate('clients')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span>Clientes</span>
+      </button>
+      <button class="m-nav-btn" data-tab="debts" onclick="navigate('debts')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        <span>Deudas</span>
+      </button>
+      <button class="m-nav-btn" data-tab="reports" onclick="navigate('reports')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        <span>Informes</span>
+      </button>
+      <button class="m-nav-btn" data-tab="backup" onclick="navigate('backup')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        <span>Respaldo</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- MODAL: CLIENTE (CREAR / EDITAR) -->
+  <div id="modal-client" class="modal-backdrop" role="dialog" aria-modal="true">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modal-client-title">Registrar Cliente</h3>
+        <button class="modal-close" onclick="closeModal('modal-client')">&times;</button>
+      </div>
+      <form id="form-client" onsubmit="saveClient(event)">
+        <div class="modal-body">
+          <input type="hidden" id="client-id" />
+          <div class="form-group">
+            <label for="client-name">Nombre y Apellido *</label>
+            <input type="text" id="client-name" class="form-control" required placeholder="Ej: María González" />
+          </div>
+          <div class="form-group">
+            <label for="client-phone">Número de Teléfono *</label>
+            <input type="tel" id="client-phone" class="form-control" required placeholder="Ej: 0981 123 456" />
+          </div>
+          <div class="form-group">
+            <label for="client-address">Dirección</label>
+            <input type="text" id="client-address" class="form-control" placeholder="Ej: Barrio Centro, calle principal" />
+          </div>
+          <div class="form-group">
+            <label for="client-reg-date">Fecha de Registro *</label>
+            <input type="date" id="client-reg-date" class="form-control" required />
+          </div>
+          <div class="form-group">
+            <label for="client-notes">Observaciones</label>
+            <textarea id="client-notes" class="form-control" placeholder="Referencias, horario preferido, etc."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeModal('modal-client')">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Guardar Cliente</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: NUEVA DEUDA -->
+  <div id="modal-debt" class="modal-backdrop" role="dialog" aria-modal="true">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title">Registrar Nueva Deuda (Compra de Ropa)</h3>
+        <button class="modal-close" onclick="closeModal('modal-debt')">&times;</button>
+      </div>
+      <form id="form-debt" onsubmit="saveDebt(event)">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="debt-client-id">Cliente *</label>
+            <select id="debt-client-id" class="form-control" required></select>
+          </div>
+          <div class="form-group">
+            <label for="debt-date">Fecha de Compra *</label>
+            <input type="date" id="debt-date" class="form-control" required />
+          </div>
+          <div class="form-group">
+            <label for="debt-description">Descripción de la Compra *</label>
+            <input type="text" id="debt-description" class="form-control" required placeholder="Ej: Pantalón jean, camisa blanca, zapatilla..." />
+          </div>
+          <div class="form-group">
+            <label for="debt-amount">Importe Total de la Deuda (Gs.) *</label>
+            <input type="text" inputmode="numeric" id="debt-amount" class="form-control" required placeholder="Ej: 500.000" oninput="formatInputGs(this)" />
+            <div class="form-hint">Ingresa el monto en guaraníes sin decimales.</div>
+          </div>
+          <div class="form-group">
+            <label for="debt-due-date">Fecha de Vencimiento *</label>
+            <input type="date" id="debt-due-date" class="form-control" required />
+          </div>
+          <div class="form-group">
+            <label for="debt-notes">Observaciones</label>
+            <textarea id="debt-notes" class="form-control" placeholder="Talle, color, acuerdo de pago..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeModal('modal-debt')">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Guardar Deuda</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: REGISTRAR PAGO / ABONO -->
+  <div id="modal-payment" class="modal-backdrop" role="dialog" aria-modal="true">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title">Registrar Pago o Abono</h3>
+        <button class="modal-close" onclick="closeModal('modal-payment')">&times;</button>
+      </div>
+      <form id="form-payment" onsubmit="savePayment(event)">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="pay-client-id">Cliente *</label>
+            <select id="pay-client-id" class="form-control" required onchange="populateClientDebtsDropdown()"></select>
+          </div>
+          <div class="form-group">
+            <label for="pay-debt-id">Deuda Correspondiente *</label>
+            <select id="pay-debt-id" class="form-control" required onchange="updateSelectedDebtInfo()"></select>
+            <div id="pay-debt-balance-hint" class="form-hint" style="font-weight:700; color:var(--primary); margin-top:6px;"></div>
+          </div>
+          <div class="form-group">
+            <label for="pay-date">Fecha del Pago *</label>
+            <input type="date" id="pay-date" class="form-control" required />
+          </div>
+          <div class="form-group">
+            <label for="pay-amount">Importe Abonado (Gs.) *</label>
+            <div style="display:flex; gap:8px;">
+              <input type="text" inputmode="numeric" id="pay-amount" class="form-control" required placeholder="Ej: 100.000" oninput="formatInputGs(this)" />
+              <button type="button" class="btn btn-outline btn-sm" onclick="fillFullDebtAmount()" title="Completar saldo total">Total</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="pay-notes">Observaciones</label>
+            <textarea id="pay-notes" class="form-control" placeholder="Efectivo, transferencia bancaria, giro..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeModal('modal-payment')">Cancelar</button>
+          <button type="submit" class="btn btn-success">Confirmar Abono</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- TOAST DE NOTIFICACIÓN -->
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    // =========================================================================
+    // ESTADO GLOBAL Y ALMACENAMIENTO SEGURO (localStorage)
+    // =========================================================================
+    const STORAGE_KEY = 'mi_anotador_deudas_v1';
+    let storageAvailable = true;
+
+    let appData = {
+      clients: [],
+      debts: [],
+      payments: []
+    };
+
+    let currentClientId = null;
+    let currentDebtFilter = 'all';
+
+    function checkStorageAvailability() {
+      try {
+        const testKey = '__test_ls__';
+        window.localStorage.setItem(testKey, '1');
+        window.localStorage.removeItem(testKey);
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function loadData() {
+      storageAvailable = checkStorageAvailability();
+      if (!storageAvailable) {
+        document.getElementById('storage-warning').style.display = 'block';
+        return;
+      }
+      try {
+        const raw = window.localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          appData.clients = Array.isArray(parsed.clients) ? parsed.clients : [];
+          appData.debts = Array.isArray(parsed.debts) ? parsed.debts : [];
+          appData.payments = Array.isArray(parsed.payments) ? parsed.payments : [];
+        }
+      } catch (err) {
+        console.error('Error al leer localStorage:', err);
+        showToast('Hubo un problema al leer los datos guardados. Se inició con memoria limpia.');
+      }
+    }
+
+    function persistData() {
+      if (!storageAvailable) return;
+      try {
+        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+      } catch (err) {
+        console.error('Error al guardar en localStorage:', err);
+        showToast('No se pudo guardar en el navegador. Descarga un respaldo JSON.');
+      }
+    }
+
+    // =========================================================================
+    // UTILIDADES DE FORMATO Y FECHAS
+    // =========================================================================
+    function generateId(prefix) {
+      return prefix + '_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7);
+    }
+
+    function getTodayISO() {
+      const now = new Date();
+      const offset = now.getTimezoneOffset();
+      const local = new Date(now.getTime() - offset * 60000);
+      return local.toISOString().split('T')[0];
+    }
+
+    function formatGs(amount) {
+      const num = Math.round(Number(amount) || 0);
+      return 'Gs. ' + num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    }
+
+    function parseGsInput(str) {
+      if (!str) return 0;
+      const digits = String(str).replace(/\D/g, '');
+      return digits ? parseInt(digits, 10) : 0;
+    }
+
+    function formatInputGs(input) {
+      const val = parseGsInput(input.value);
+      input.value = val > 0 ? val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') : '';
+    }
+
+    function formatDateDisplay(isoDate) {
+      if (!isoDate) return '-';
+      const parts = isoDate.split('-');
+      if (parts.length !== 3) return isoDate;
+      return `${parts[2]}/${parts[1]}/${parts[0]}`;
+    }
+
+    function escapeHTML(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function showToast(msg) {
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.classList.add('show');
+      clearTimeout(el._timer);
+      el._timer = setTimeout(() => {
+        el.classList.remove('show');
+      }, 3200);
+    }
+
+    // =========================================================================
+    // CÁLCULOS DE DEUDAS Y PAGOS
+    // =========================================================================
+    function getDebtPaidAmount(debtId) {
+      return appData.payments
+        .filter(p => p.debtId === debtId)
+        .reduce((sum, p) => sum + Number(p.amount), 0);
+    }
+
+    function getDebtRemaining(debt) {
+      const paid = getDebtPaidAmount(debt.id);
+      const rem = Number(debt.totalAmount) - paid;
+      return rem > 0 ? rem : 0;
+    }
+
+    function getDebtStatus(debt) {
+      const remaining = getDebtRemaining(debt);
+      if (remaining <= 0) {
+        return { code: 'paid', label: 'PAGADA', badgeClass: 'badge-paid' };
+      }
+      const today = getTodayISO();
+      if (debt.dueDate && debt.dueDate < today) {
+        return { code: 'overdue', label: 'VENCIDA', badgeClass: 'badge-overdue' };
+      }
+      return { code: 'pending', label: 'PENDIENTE', badgeClass: 'badge-pending' };
+    }
+
+    function getClientSummary(clientId) {
+      const clientDebts = appData.debts.filter(d => d.clientId === clientId);
+      const totalCredit = clientDebts.reduce((sum, d) => sum + Number(d.totalAmount), 0);
+      const totalPaid = appData.payments
+        .filter(p => p.clientId === clientId)
+        .reduce((sum, p) => sum + Number(p.amount), 0);
+      const totalPending = Math.max(0, totalCredit - totalPaid);
+      return { totalCredit, totalPaid, totalPending, debtsCount: clientDebts.length };
+    }
+
+    // =========================================================================
+    // NAVEGACIÓN ENTRE SECCIONES
+    // =========================================================================
+    function navigate(tabName) {
+      document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+      const target = document.getElementById('sec-' + tabName);
+      if (target) target.classList.add('active');
+
+      const navTab = tabName === 'client-detail' ? 'clients' : tabName;
+      document.querySelectorAll('.nav-btn, .m-nav-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.tab === navTab);
+      });
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      renderAll();
+    }
+
+    function openClientDetail(clientId) {
+      const client = appData.clients.find(c => c.id === clientId);
+      if (!client) return;
+      currentClientId = clientId;
+      navigate('client-detail');
+    }
+
+    // =========================================================================
+    // MODALES
+    // =========================================================================
+    function openModal(id) {
+      document.getElementById(id).classList.add('open');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('open');
+    }
+
+    // =========================================================================
+    // CRUD CLIENTES
+    // =========================================================================
+    function openClientModal(editId = null) {
+      const form = document.getElementById('form-client');
+      form.reset();
+      document.getElementById('client-id').value = '';
+
+      if (editId) {
+        const c = appData.clients.find(item => item.id === editId);
+        if (!c) return;
+        document.getElementById('modal-client-title').textContent = 'Editar Cliente';
+        document.getElementById('client-id').value = c.id;
+        document.getElementById('client-name').value = c.name;
+        document.getElementById('client-phone').value = c.phone;
+        document.getElementById('client-address').value = c.address || '';
+        document.getElementById('client-reg-date').value = c.regDate || getTodayISO();
+        document.getElementById('client-notes').value = c.notes || '';
+      } else {
+        document.getElementById('modal-client-title').textContent = 'Registrar Nuevo Cliente';
+        document.getElementById('client-reg-date').value = getTodayISO();
+      }
+      openModal('modal-client');
+    }
+
+    function saveClient(e) {
+      e.preventDefault();
+      const id = document.getElementById('client-id').value;
+      const name = document.getElementById('client-name').value.trim();
+      const phone = document.getElementById('client-phone').value.trim();
+      const address = document.getElementById('client-address').value.trim();
+      const regDate = document.getElementById('client-reg-date').value;
+      const notes = document.getElementById('client-notes').value.trim();
+
+      if (!name || !phone || !regDate) {
+        showToast('Completa los campos obligatorios.');
+        return;
+      }
+
+      if (id) {
+        const idx = appData.clients.findIndex(c => c.id === id);
+        if (idx !== -1) {
+          appData.clients[idx] = { ...appData.clients[idx], name, phone, address, regDate, notes };
+          showToast('Datos del cliente actualizados.');
+        }
+      } else {
+        appData.clients.push({
+          id: generateId('cli'),
+          name,
+          phone,
+          address,
+          regDate,
+          notes
+        });
+        showToast('Cliente registrado correctamente.');
+      }
+
+      persistData();
+      closeModal('modal-client');
+      renderAll();
+    }
+
+    function deleteClient(clientId) {
+      const client = appData.clients.find(c => c.id === clientId);
+      if (!client) return;
+
+      const confirmed = window.confirm(
+        `¿Estás seguro de eliminar al cliente "${client.name}"?\n\nSe eliminarán también todas sus deudas e historial de pagos asociados.`
+      );
+      if (!confirmed) return;
+
+      appData.clients = appData.clients.filter(c => c.id !== clientId);
+      appData.debts = appData.debts.filter(d => d.clientId !== clientId);
+      appData.payments = appData.payments.filter(p => p.clientId !== clientId);
+
+      persistData();
+      showToast('Cliente eliminado.');
+      if (currentClientId === clientId) {
+        currentClientId = null;
+        navigate('clients');
+      } else {
+        renderAll();
+      }
+    }
+
+    // =========================================================================
+    // CRUD DEUDAS
+    // =========================================================================
+    function openDebtModal(preselectedClientId = null) {
+      if (appData.clients.length === 0) {
+        showToast('Primero debes registrar al menos un cliente.');
+        openClientModal();
+        return;
+      }
+
+      const form = document.getElementById('form-debt');
+      form.reset();
+
+      const select = document.getElementById('debt-client-id');
+      select.innerHTML = appData.clients
+        .slice()
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .map(c => `<option value="${c.id}">${escapeHTML(c.name)} (${escapeHTML(c.phone)})</option>`)
+        .join('');
+
+      if (preselectedClientId) {
+        select.value = preselectedClientId;
+      }
+
+      const today = getTodayISO();
+      document.getElementById('debt-date').value = today;
+
+      // Vencimiento sugerido a 30 días
+      const due = new Date();
+      due.setDate(due.getDate() + 30);
+      document.getElementById('debt-due-date').value = due.toISOString().split('T')[0];
+
+      openModal('modal-debt');
+    }
+
+    function saveDebt(e) {
+      e.preventDefault();
+      const clientId = document.getElementById('debt-client-id').value;
+      const purchaseDate = document.getElementById('debt-date').value;
+      const description = document.getElementById('debt-description').value.trim();
+      const totalAmount = parseGsInput(document.getElementById('debt-amount').value);
+      const dueDate = document.getElementById('debt-due-date').value;
+      const notes = document.getElementById('debt-notes').value.trim();
+
+      if (!clientId || !purchaseDate || !description || !dueDate) {
+        showToast('Por favor completa todos los campos obligatorios.');
+        return;
+      }
+
+      if (totalAmount <= 0) {
+        showToast('El importe de la deuda debe ser mayor a Gs. 0.');
+        return;
+      }
+
+      appData.debts.push({
+        id: generateId('deb'),
+        clientId,
+        purchaseDate,
+        description,
+        totalAmount,
+        dueDate,
+        notes
+      });
+
+      persistData();
+      closeModal('modal-debt');
+      showToast('Deuda registrada correctamente.');
+      renderAll();
+    }
+
+    function deleteDebt(debtId) {
+      const debt = appData.debts.find(d => d.id === debtId);
+      if (!debt) return;
+
+      const confirmed = window.confirm(
+        `¿Estás seguro de eliminar esta deuda ("${debt.description}" por ${formatGs(debt.totalAmount)})?\n\nTambién se eliminarán los pagos asociados a esta deuda.`
+      );
+      if (!confirmed) return;
+
+      appData.debts = appData.debts.filter(d => d.id !== debtId);
+      appData.payments = appData.payments.filter(p => p.debtId !== debtId);
+
+      persistData();
+      showToast('Deuda eliminada.');
+      renderAll();
+    }
+
+    // =========================================================================
+    // CRUD PAGOS Y ABONOS
+    // =========================================================================
+    function openQuickPaymentModal() {
+      openPaymentModal(null, null);
+    }
+
+    function openPaymentModal(preselectedClientId = null, preselectedDebtId = null) {
+      // Filtrar clientes que tienen al menos una deuda con saldo pendiente
+      const clientsWithPending = appData.clients.filter(c => {
+        return appData.debts.some(d => d.clientId === c.id && getDebtRemaining(d) > 0);
+      });
+
+      if (clientsWithPending.length === 0) {
+        showToast('No hay deudas pendientes de cobro en este momento.');
+        return;
+      }
+
+      const form = document.getElementById('form-payment');
+      form.reset();
+      document.getElementById('pay-date').value = getTodayISO();
+
+      const clientSelect = document.getElementById('pay-client-id');
+      clientSelect.innerHTML = clientsWithPending
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .map(c => `<option value="${c.id}">${escapeHTML(c.name)}</option>`)
+        .join('');
+
+      if (preselectedClientId && clientsWithPending.some(c => c.id === preselectedClientId)) {
+        clientSelect.value = preselectedClientId;
+      }
+
+      populateClientDebtsDropdown(preselectedDebtId);
+      openModal('modal-payment');
+    }
+
+    function populateClientDebtsDropdown(preselectedDebtId = null) {
+      const clientId = document.getElementById('pay-client-id').value;
+      const pendingDebts = appData.debts.filter(d => d.clientId === clientId && getDebtRemaining(d) > 0);
+
+      const debtSelect = document.getElementById('pay-debt-id');
+      debtSelect.innerHTML = pendingDebts
+        .map(d => {
+          const rem = getDebtRemaining(d);
+          return `<option value="${d.id}">${escapeHTML(d.description)} (${formatDateDisplay(d.purchaseDate)}) — Saldo: ${formatGs(rem)}</option>`;
+        })
+        .join('');
+
+      if (preselectedDebtId && pendingDebts.some(d => d.id === preselectedDebtId)) {
+        debtSelect.value = preselectedDebtId;
+      }
+
+      updateSelectedDebtInfo();
+    }
+
+    function updateSelectedDebtInfo() {
+      const debtId = document.getElementById('pay-debt-id').value;
+      const debt = appData.debts.find(d => d.id === debtId);
+      const hint = document.getElementById('pay-debt-balance-hint');
+      if (!debt) {
+        hint.textContent = '';
+        return;
+      }
+      const rem = getDebtRemaining(debt);
+      hint.textContent = `Deuda inicial: ${formatGs(debt.totalAmount)} | Saldo pendiente: ${formatGs(rem)}`;
+    }
+
+    function fillFullDebtAmount() {
+      const debtId = document.getElementById('pay-debt-id').value;
+      const debt = appData.debts.find(d => d.id === debtId);
+      if (!debt) return;
+      const rem = getDebtRemaining(debt);
+      const input = document.getElementById('pay-amount');
+      input.value = rem.toString();
+      formatInputGs(input);
+    }
+
+    function savePayment(e) {
+      e.preventDefault();
+      const clientId = document.getElementById('pay-client-id').value;
+      const debtId = document.getElementById('pay-debt-id').value;
+      const payDate = document.getElementById('pay-date').value;
+      const amount = parseGsInput(document.getElementById('pay-amount').value);
+      const notes = document.getElementById('pay-notes').value.trim();
+
+      const debt = appData.debts.find(d => d.id === debtId);
+      if (!clientId || !debt || !payDate) {
+        showToast('Completa todos los datos del pago.');
+        return;
+      }
+
+      const remaining = getDebtRemaining(debt);
+
+      if (amount <= 0) {
+        showToast('Error: El monto abonado debe ser mayor a Gs. 0.');
+        return;
+      }
+
+      if (amount > remaining) {
+        showToast(`Error: No puedes cobrar más que el saldo pendiente (${formatGs(remaining)}).`);
+        return;
+      }
+
+      appData.payments.push({
+        id: generateId('pay'),
+        clientId,
+        debtId,
+        payDate,
+        amount,
+        notes
+      });
+
+      persistData();
+      closeModal('modal-payment');
+
+      const newRem = getDebtRemaining(debt);
+      if (newRem === 0) {
+        showToast('¡Abono registrado! La deuda quedó completamente PAGADA.');
+      } else {
+        showToast(`Abono registrado. Nuevo saldo pendiente: ${formatGs(newRem)}`);
+      }
+
+      renderAll();
+    }
+
+    function deletePayment(paymentId) {
+      const payment = appData.payments.find(p => p.id === paymentId);
+      if (!payment) return;
+
+      const confirmed = window.confirm(
+        `¿Estás seguro de eliminar este pago de ${formatGs(payment.amount)}?\n\nEl monto volverá a sumarse al saldo pendiente de la deuda.`
+      );
+      if (!confirmed) return;
+
+      appData.payments = appData.payments.filter(p => p.id !== paymentId);
+      persistData();
+      showToast('Pago eliminado y saldo recalculado.');
+      renderAll();
+    }
+
+    // =========================================================================
+    // RENDERIZADO DE INTERFAZ
+    // =========================================================================
+    function renderAll() {
+      renderDashboard();
+      renderClients();
+      renderClientDetail();
+      renderAllDebts();
+      renderReports();
+    }
+
+    function renderDashboard() {
+      const totalClients = appData.clients.length;
+      const totalSold = appData.debts.reduce((sum, d) => sum + Number(d.totalAmount), 0);
+      const totalCollected = appData.payments.reduce((sum, p) => sum + Number(p.amount), 0);
+      const totalPending = Math.max(0, totalSold - totalCollected);
+
+      const debtorsCount = appData.clients.filter(c => getClientSummary(c.id).totalPending > 0).length;
+
+      document.getElementById('kpi-total-clients').textContent = totalClients;
+      document.getElementById('kpi-pending-amount').textContent = formatGs(totalPending);
+      document.getElementById('kpi-collected-amount').textContent = formatGs(totalCollected);
+      document.getElementById('kpi-debtors-count').textContent = debtorsCount;
+
+      const container = document.getElementById('dashboard-recent-payments');
+      if (appData.payments.length === 0) {
+        container.innerHTML = `<div class="empty-state"><p>Aún no hay pagos registrados.</p></div>`;
+        return;
+      }
+
+      const recent = appData.payments
+        .slice()
+        .sort((a, b) => b.payDate.localeCompare(a.payDate))
+        .slice(0, 8);
+
+      container.innerHTML = `
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Cliente</th>
+                <th>Compra / Deuda</th>
+                <th>Monto Abonado</th>
+                <th>Observación</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${recent.map(p => {
+                const client = appData.clients.find(c => c.id === p.clientId);
+                const debt = appData.debts.find(d => d.id === p.debtId);
+                return `
+                  <tr>
+                    <td>${formatDateDisplay(p.payDate)}</td>
+                    <td><strong>${client ? escapeHTML(client.name) : 'Cliente eliminado'}</strong></td>
+                    <td>${debt ? escapeHTML(debt.description) : '-'}</td>
+                    <td style="color:var(--success); font-weight:700;">${formatGs(p.amount)}</td>
+                    <td>${escapeHTML(p.notes || '-')}</td>
+                  </tr>
+                `;
+              }).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function renderClients() {
+      const query = (document.getElementById('client-search-input').value || '').toLowerCase().trim();
+      const filter = document.getElementById('client-filter-select').value;
+      const container = document.getElementById('clients-list-container');
+
+      let filtered = appData.clients.filter(c => {
+        const matchText =
+          c.name.toLowerCase().includes(query) ||
+          c.phone.toLowerCase().includes(query);
+        if (!matchText) return false;
+
+        const summary = getClientSummary(c.id);
+        if (filter === 'with_debt') return summary.totalPending > 0;
+        if (filter === 'no_debt') return summary.totalPending === 0;
+        return true;
+      });
+
+      filtered.sort((a, b) => a.name.localeCompare(b.name));
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="card empty-state">
+            <p>${appData.clients.length === 0 ? 'Todavía no tienes clientes registrados.' : 'No se encontraron clientes con ese criterio de búsqueda.'}</p>
+            <button class="btn btn-primary" onclick="openClientModal()">+ Registrar Primer Cliente</button>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = `
+        <div class="client-grid">
+          ${filtered.map(c => {
+            const sum = getClientSummary(c.id);
+            const hasDebt = sum.totalPending > 0;
+            return `
+              <div class="client-card">
+                <div>
+                  <div class="client-card-top">
+                    <div>
+                      <div class="client-name">${escapeHTML(c.name)}</div>
+                      <div class="client-meta">Tel: ${escapeHTML(c.phone)}</div>
+                      ${c.address ? `<div class="client-meta">Dir: ${escapeHTML(c.address)}</div>` : ''}
+                    </div>
+                    <span class="badge ${hasDebt ? 'badge-pending' : 'badge-paid'}">
+                      ${hasDebt ? 'Con deuda' : 'Al día'}
+                    </span>
+                  </div>
+                </div>
+
+                <div class="client-balance-box">
+                  <span style="font-size:0.84rem; color:var(--text-muted); font-weight:600;">Saldo pendiente:</span>
+                  <strong style="font-size:1.05rem; color:${hasDebt ? 'var(--danger)' : 'var(--success)'};">
+                    ${formatGs(sum.totalPending)}
+                  </strong>
+                </div>
+
+                <div class="client-card-actions">
+                  <button class="btn btn-primary btn-sm" onclick="openClientDetail('${c.id}')">Ver Ficha</button>
+                  <button class="btn btn-outline btn-sm" onclick="openClientModal('${c.id}')">Editar</button>
+                  <button class="btn btn-danger btn-sm" onclick="deleteClient('${c.id}')">Eliminar</button>
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
+    }
+
+    function renderClientDetail() {
+      if (!currentClientId) return;
+      const client = appData.clients.find(c => c.id === currentClientId);
+      if (!client) return;
+
+      document.getElementById('detail-client-name').textContent = client.name;
+
+      document.getElementById('detail-client-info').innerHTML = `
+        <div class="info-item"><small>Teléfono</small><span>${escapeHTML(client.phone)}</span></div>
+        <div class="info-item"><small>Dirección</small><span>${escapeHTML(client.address || 'No registrada')}</span></div>
+        <div class="info-item"><small>Fecha de Registro</small><span>${formatDateDisplay(client.regDate)}</span></div>
+        <div class="info-item"><small>Observaciones</small><span>${escapeHTML(client.notes || 'Sin observaciones')}</span></div>
+      `;
+
+      const summary = getClientSummary(client.id);
+      document.getElementById('detail-total-credit').textContent = formatGs(summary.totalCredit);
+      document.getElementById('detail-total-paid').textContent = formatGs(summary.totalPaid);
+      document.getElementById('detail-total-pending').textContent = formatGs(summary.totalPending);
+
+      // Listado de deudas del cliente
+      const debtsContainer = document.getElementById('detail-debts-container');
+      const clientDebts = appData.debts
+        .filter(d => d.clientId === client.id)
+        .sort((a, b) => b.purchaseDate.localeCompare(a.purchaseDate));
+
+      if (clientDebts.length === 0) {
+        debtsContainer.innerHTML = `<div class="empty-state"><p>Este cliente no tiene deudas registradas.</p></div>`;
+      } else {
+        debtsContainer.innerHTML = `
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Compra</th>
+                  <th>Prendas / Descripción</th>
+                  <th>Deuda Inicial</th>
+                  <th>Abonado</th>
+                  <th>Saldo Pendiente</th>
+                  <th>Vencimiento</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${clientDebts.map(d => {
+                  const paid = getDebtPaidAmount(d.id);
+                  const rem = getDebtRemaining(d);
+                  const status = getDebtStatus(d);
+                  return `
+                    <tr>
+                      <td>${formatDateDisplay(d.purchaseDate)}</td>
+                      <td>
+                        <strong>${escapeHTML(d.description)}</strong>
+                        ${d.notes ? `<div style="font-size:0.78rem; color:var(--text-muted);">${escapeHTML(d.notes)}</div>` : ''}
+                      </td>
+                      <td>${formatGs(d.totalAmount)}</td>
+                      <td style="color:var(--success);">${formatGs(paid)}</td>
+                      <td style="font-weight:700; color:${rem > 0 ? 'var(--danger)' : 'var(--success)'};">${formatGs(rem)}</td>
+                      <td>${formatDateDisplay(d.dueDate)}</td>
+                      <td><span class="badge ${status.badgeClass}">${status.label}</span></td>
+                      <td>
+                        <div class="actions-cell">
+                          ${rem > 0 ? `<button class="btn btn-success btn-sm" onclick="openPaymentModal('${client.id}', '${d.id}')">Abonar</button>` : ''}
+                          <button class="btn btn-danger btn-sm" onclick="deleteDebt('${d.id}')">Eliminar</button>
+                        </div>
+                      </td>
+                    </tr>
+                  `;
+                }).join('')}
+              </tbody>
+            </table>
+          </div>
+        `;
+      }
+
+      // Historial de pagos del cliente
+      const paymentsContainer = document.getElementById('detail-payments-container');
+      const clientPayments = appData.payments
+        .filter(p => p.clientId === client.id)
+        .sort((a, b) => b.payDate.localeCompare(a.payDate));
+
+      if (clientPayments.length === 0) {
+        paymentsContainer.innerHTML = `<div class="empty-state"><p>Aún no se registraron abonos para este cliente.</p></div>`;
+      } else {
+        paymentsContainer.innerHTML = `
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Fecha de Pago</th>
+                  <th>Deuda Correspondiente</th>
+                  <th>Importe Abonado</th>
+                  <th>Observaciones</th>
+                  <th>Acción</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${clientPayments.map(p => {
+                  const debt = appData.debts.find(d => d.id === p.debtId);
+                  return `
+                    <tr>
+                      <td>${formatDateDisplay(p.payDate)}</td>
+                      <td>${debt ? escapeHTML(debt.description) : 'Deuda eliminada'}</td>
+                      <td style="color:var(--success); font-weight:700;">${formatGs(p.amount)}</td>
+                      <td>${escapeHTML(p.notes || '-')}</td>
+                      <td>
+                        <button class="btn btn-danger btn-sm" onclick="deletePayment('${p.id}')">Eliminar</button>
+                      </td>
+                    </tr>
+                  `;
+                }).join('')}
+              </tbody>
+            </table>
+          </div>
+        `;
+      }
+    }
+
+    function setDebtFilter(filter) {
+      currentDebtFilter = filter;
+      document.querySelectorAll('#debt-filter-pills .pill').forEach(p => {
+        p.classList.toggle('active', p.dataset.filter === filter);
+      });
+      renderAllDebts();
+    }
+
+    function renderAllDebts() {
+      const query = (document.getElementById('debt-search-input').value || '').toLowerCase().trim();
+      const container = document.getElementById('all-debts-container');
+
+      let filtered = appData.debts.filter(d => {
+        const client = appData.clients.find(c => c.id === d.clientId);
+        const status = getDebtStatus(d);
+
+        if (currentDebtFilter !== 'all' && status.code !== currentDebtFilter) {
+          return false;
+        }
+
+        if (query) {
+          const clientName = client ? client.name.toLowerCase() : '';
+          const clientPhone = client ? client.phone.toLowerCase() : '';
+          const desc = d.description.toLowerCase();
+          return clientName.includes(query) || clientPhone.includes(query) || desc.includes(query);
+        }
+        return true;
+      });
+
+      filtered.sort((a, b) => b.purchaseDate.localeCompare(a.purchaseDate));
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<div class="empty-state"><p>No hay deudas que coincidan con el filtro seleccionado.</p></div>`;
+        return;
+      }
+
+      container.innerHTML = `
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Cliente</th>
+                <th>Compra</th>
+                <th>Deuda Inicial</th>
+                <th>Saldo Pendiente</th>
+                <th>Vencimiento</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${filtered.map(d => {
+                const client = appData.clients.find(c => c.id === d.clientId);
+                const rem = getDebtRemaining(d);
+                const status = getDebtStatus(d);
+                return `
+                  <tr>
+                    <td>
+                      <a href="javascript:void(0)" onclick="openClientDetail('${d.clientId}')" style="color:var(--primary); font-weight:700; text-decoration:none;">
+                        ${client ? escapeHTML(client.name) : 'Cliente'}
+                      </a>
+                      <div style="font-size:0.78rem; color:var(--text-muted);">${client ? escapeHTML(client.phone) : ''}</div>
+                    </td>
+                    <td>
+                      <div>${escapeHTML(d.description)}</div>
+                      <small style="color:var(--text-muted);">${formatDateDisplay(d.purchaseDate)}</small>
+                    </td>
+                    <td>${formatGs(d.totalAmount)}</td>
+                    <td style="font-weight:700; color:${rem > 0 ? 'var(--danger)' : 'var(--success)'};">${formatGs(rem)}</td>
+                    <td>${formatDateDisplay(d.dueDate)}</td>
+                    <td><span class="badge ${status.badgeClass}">${status.label}</span></td>
+                    <td>
+                      <div class="actions-cell">
+                        ${rem > 0 ? `<button class="btn btn-success btn-sm" onclick="openPaymentModal('${d.clientId}', '${d.id}')">Abonar</button>` : ''}
+                        <button class="btn btn-danger btn-sm" onclick="deleteDebt('${d.id}')">Eliminar</button>
+                      </div>
+                    </td>
+                  </tr>
+                `;
+              }).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function renderReports() {
+      const totalSold = appData.debts.reduce((sum, d) => sum + Number(d.totalAmount), 0);
+      const totalCollected = appData.payments.reduce((sum, p) => sum + Number(p.amount), 0);
+      const totalPending = Math.max(0, totalSold - totalCollected);
+
+      const overdueDebts = appData.debts.filter(d => getDebtStatus(d).code === 'overdue');
+      const overdueAmount = overdueDebts.reduce((sum, d) => sum + getDebtRemaining(d), 0);
+
+      document.getElementById('rep-total-sold').textContent = formatGs(totalSold);
+      document.getElementById('rep-total-collected').textContent = formatGs(totalCollected);
+      document.getElementById('rep-total-pending').textContent = formatGs(totalPending);
+      document.getElementById('rep-overdue-amount').textContent = formatGs(overdueAmount);
+
+      // Clientes con mayor deuda
+      const debtors = appData.clients
+        .map(c => ({ client: c, summary: getClientSummary(c.id) }))
+        .filter(item => item.summary.totalPending > 0)
+        .sort((a, b) => b.summary.totalPending - a.summary.totalPending);
+
+      const topContainer = document.getElementById('rep-top-debtors');
+      if (debtors.length === 0) {
+        topContainer.innerHTML = `<div class="empty-state"><p>Ningún cliente tiene saldo pendiente.</p></div>`;
+      } else {
+        topContainer.innerHTML = `
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Cliente</th>
+                  <th>Teléfono</th>
+                  <th>Total Comprado</th>
+                  <th>Total Abonado</th>
+                  <th>Saldo Pendiente</th>
+                  <th>Ficha</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${debtors.map(item => `
+                  <tr>
+                    <td><strong>${escapeHTML(item.client.name)}</strong></td>
+                    <td>${escapeHTML(item.client.phone)}</td>
+                    <td>${formatGs(item.summary.totalCredit)}</td>
+                    <td style="color:var(--success);">${formatGs(item.summary.totalPaid)}</td>
+                    <td style="color:var(--danger); font-weight:700;">${formatGs(item.summary.totalPending)}</td>
+                    <td><button class="btn btn-outline btn-sm" onclick="openClientDetail('${item.client.id}')">Abrir</button></td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        `;
+      }
+
+      // Listado de deudas vencidas
+      const overdueContainer = document.getElementById('rep-overdue-list');
+      if (overdueDebts.length === 0) {
+        overdueContainer.innerHTML = `<div class="empty-state"><p>No hay deudas vencidas actualmente.</p></div>`;
+      } else {
+        overdueContainer.innerHTML = `
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Cliente</th>
+                  <th>Teléfono</th>
+                  <th>Compra</th>
+                  <th>Venció el</th>
+                  <th>Saldo Vencido</th>
+                  <th>Acción</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${overdueDebts.map(d => {
+                  const client = appData.clients.find(c => c.id === d.clientId);
+                  return `
+                    <tr>
+                      <td><strong>${client ? escapeHTML(client.name) : '-'}</strong></td>
+                      <td>${client ? escapeHTML(client.phone) : '-'}</td>
+                      <td>${escapeHTML(d.description)}</td>
+                      <td style="color:var(--danger); font-weight:600;">${formatDateDisplay(d.dueDate)}</td>
+                      <td style="color:var(--danger); font-weight:700;">${formatGs(getDebtRemaining(d))}</td>
+                      <td><button class="btn btn-success btn-sm" onclick="openPaymentModal('${d.clientId}', '${d.id}')">Registrar Abono</button></td>
+                    </tr>
+                  `;
+                }).join('')}
+              </tbody>
+            </table>
+          </div>
+        `;
+      }
+    }
+
+    // =========================================================================
+    // RESPALDO JSON Y EXPORTACIÓN CSV
+    // =========================================================================
+    function triggerDownload(content, filename, mimeType) {
+      const blob = new Blob([content], { type: mimeType });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+
+    function exportBackupJSON() {
+      const backupPayload = {
+        app: 'MI ANOTADOR DE DEUDAS',
+        version: 1,
+        exportedAt: new Date().toISOString(),
+        data: appData
+      };
+      const filename = `respaldo-anotador-deudas-${getTodayISO()}.json`;
+      triggerDownload(JSON.stringify(backupPayload, null, 2), filename, 'application/json');
+      showToast('Copia de seguridad JSON descargada.');
+    }
+
+    function handleRestoreFile(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const parsed = JSON.parse(e.target.result);
+          const restored = parsed.data ? parsed.data : parsed;
+
+          if (!Array.isArray(restored.clients) || !Array.isArray(restored.debts) || !Array.isArray(restored.payments)) {
+            throw new Error('Formato de archivo no válido.');
+          }
+
+          const confirmed = window.confirm(
+            `Se encontraron ${restored.clients.length} clientes, ${restored.debts.length} deudas y ${restored.payments.length} pagos en el archivo.\n\n¿Deseas reemplazar los datos actuales con esta copia de seguridad?`
+          );
+          if (!confirmed) return;
+
+          appData = {
+            clients: restored.clients,
+            debts: restored.debts,
+            payments: restored.payments
+          };
+          persistData();
+          renderAll();
+          showToast('Copia de seguridad restaurada con éxito.');
+        } catch (err) {
+          alert('El archivo seleccionado no es una copia de seguridad válida de MI ANOTADOR DE DEUDAS.');
+        } finally {
+          event.target.value = '';
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function toCSVRow(fields) {
+      return fields.map(val => {
+        const str = val === null || val === undefined ? '' : String(val);
+        return `"${str.replace(/"/g, '""')}"`;
+      }).join(';');
+    }
+
+    function exportClientsCSV() {
+      const headers = ['Nombre y Apellido', 'Telefono', 'Direccion', 'Fecha Registro', 'Total Credito (Gs)', 'Total Abonado (Gs)', 'Saldo Pendiente (Gs)', 'Observaciones'];
+      const rows = appData.clients.map(c => {
+        const s = getClientSummary(c.id);
+        return toCSVRow([c.name, c.phone, c.address, c.regDate, s.totalCredit, s.totalPaid, s.totalPending, c.notes]);
+      });
+      const csv = '\uFEFF' + [toCSVRow(headers), ...rows].join('\n');
+      triggerDownload(csv, `clientes-deudas-${getTodayISO()}.csv`, 'text/csv;charset=utf-8;');
+      showToast('Archivo CSV de clientes descargado.');
+    }
+
+    function exportDebtsCSV() {
+      const headers = ['Cliente', 'Telefono', 'Fecha Compra', 'Descripcion', 'Deuda Inicial (Gs)', 'Abonado (Gs)', 'Saldo Pendiente (Gs)', 'Vencimiento', 'Estado', 'Observaciones'];
+      const rows = appData.debts.map(d => {
+        const c = appData.clients.find(item => item.id === d.clientId);
+        const paid = getDebtPaidAmount(d.id);
+        const rem = getDebtRemaining(d);
+        const st = getDebtStatus(d).label;
+        return toCSVRow([c ? c.name : '', c ? c.phone : '', d.purchaseDate, d.description, d.totalAmount, paid, rem, d.dueDate, st, d.notes]);
+      });
+      const csv = '\uFEFF' + [toCSVRow(headers), ...rows].join('\n');
+      triggerDownload(csv, `deudas-ropa-${getTodayISO()}.csv`, 'text/csv;charset=utf-8;');
+      showToast('Archivo CSV de deudas descargado.');
+    }
+
+    function exportPaymentsCSV() {
+      const headers = ['Fecha Pago', 'Cliente', 'Deuda Correspondiente', 'Importe Abonado (Gs)', 'Observaciones'];
+      const rows = appData.payments.map(p => {
+        const c = appData.clients.find(item => item.id === p.clientId);
+        const d = appData.debts.find(item => item.id === p.debtId);
+        return toCSVRow([p.payDate, c ? c.name : '', d ? d.description : '', p.amount, p.notes]);
+      });
+      const csv = '\uFEFF' + [toCSVRow(headers), ...rows].join('\n');
+      triggerDownload(csv, `pagos-abonos-${getTodayISO()}.csv`, 'text/csv;charset=utf-8;');
+      showToast('Archivo CSV de pagos descargado.');
+    }
+
+    // =========================================================================
+    // INICIALIZACIÓN
+    // =========================================================================
+    window.addEventListener('DOMContentLoaded', () => {
+      loadData();
+      renderAll();
+    });
+  </script>
+</body>
+</html>
